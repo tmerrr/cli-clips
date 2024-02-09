@@ -7,8 +7,8 @@ import {
   confirmInput,
   selectInput,
   selectCommandFromTopic,
-} from '../helpers';
-import { selectTopic } from './common';
+  selectTopic,
+} from '../../helpers';
 
 export const addCommand = async () => {
   const topic = await selectTopic('Select topic to add command:');

@@ -5,7 +5,7 @@ import {
   rmSync,
 } from 'fs';
 import { CHEAT_SHEET_DIRECTORY } from '../constants';
-import { getTopicPath, topicExists } from './common';
+import { getTopicPath, topicExists } from '../helpers';
 
 export const listTopics = (): string[] => {
   return readdirSync(CHEAT_SHEET_DIRECTORY);

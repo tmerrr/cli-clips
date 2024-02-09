@@ -2,15 +2,15 @@ import {
   getInput,
   editInput,
   confirmInput,
-} from '../helpers';
+  topicExists,
+  selectTopic,
+} from '../../helpers';
 import {
   createTopic,
   listTopics,
   renameTopic,
   deleteTopic,
 } from '../../repositories/topic';
-import { topicExists } from '../../repositories/common';
-import { selectTopic } from './common';
 
 export const addTopic = async () => {
   const topic = await getInput('Enter new topic name: ');
