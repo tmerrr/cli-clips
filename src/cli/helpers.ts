@@ -42,3 +42,14 @@ export const editInput = (value: string): Promise<string> => {
     });
   })
 };
+
+export const confirmInput = async (question: string): Promise<boolean> => {
+  const answer = await inquirer.prompt([
+    {
+      name: KEY,
+      type: 'confirm',
+      message: question,
+    }
+  ]);
+  return answer[KEY];
+}

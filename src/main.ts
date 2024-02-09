@@ -55,7 +55,7 @@ const main = async () => {
       case SubCommand.Add:
         addTopic();
         break;
-      case undefined:
+      case undefined: // list by default
       case SubCommand.List:
         printTopics();
         break;
@@ -69,8 +69,14 @@ const main = async () => {
         console.log(`"${subcommand}" is an invalid command for the topic resource`);
     }
   
+  } else if (isCommand(mainOptions.resource)) {
+
+  } else if (!mainOptions.resource) {
+    const resources = Object.values(Resource).map((resource) => `"${resource}"`);
+    console.log(`Must specify a resource: ${resources.join(', ')}`);
+  } else{
+    console.log(`"${mainOptions.resource}" is an invalid resource`);
   }
-  
 };
 
 main();

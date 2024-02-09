@@ -1,4 +1,9 @@
-import { getInput, selectInput, editInput } from '../helpers';
+import {
+  getInput,
+  selectInput,
+  editInput,
+  confirmInput,
+} from '../helpers';
 import {
   topicExists,
   createTopic,
@@ -43,12 +48,27 @@ export const editTopic = async () => {
 };
 
 export const removeTopic = async () => {
-  const topics = listTopics();
-  if (topics.length) {
-    const topic = await selectInput('Select topic to delete: ', topics);
+  const topic = await selectTopic('Select topic to delete: ');
+  if (topic === null) {
+    return;
+  }
+  console.log(`Deleting topic "${topic}" will permanently delete the topic and all associated commands`);
+  const isConfirmed = await confirmInput('Are you sure you want to delete this topic?');
+  if (isConfirmed === true) {
     deleteTopic(topic);
     console.log(`Topic "${topic}" deleted`);
   } else {
-    console.log('No topics found');
+    console.log('Topic not deleted');
   }
 }
+
+export const selectTopic = async (prompt: string): Promise<string | null> => {
+  const topics = listTopics();
+  if (topics.length) {
+    const topic = await selectInput(prompt, topics);
+    return topic;
+  } else {
+    console.log('No topics found');
+    return null;
+  }
+};
