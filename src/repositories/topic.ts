@@ -4,7 +4,6 @@ import {
   readdirSync,
   writeFileSync,
   renameSync,
-  // rmdirSync,
   rmSync,
 } from 'fs';
 import { CHEAT_SHEET_DIRECTORY } from '../constants';
@@ -15,7 +14,7 @@ export const listTopics = (): string[] => {
 };
 
 export const createTopic = (topic: string): void => {
-  if (doesTopicExist(topic)) {
+  if (topicExists(topic)) {
     console.error(`Topic "${topic}" already exists`);
   } else {
     _createTopic(topic);
@@ -23,27 +22,26 @@ export const createTopic = (topic: string): void => {
 };
 
 export const renameTopic = (originalTopic: string, newTopic: string): void => {
-  const originalTopicPath = getTopicPath(originalTopic);
-  if (!doesTopicExist(originalTopic)) {
+  if (!topicExists(originalTopic)) {
     console.error(`Topic "${originalTopic}" does not exist`);
     return;
   }
-  if (doesTopicExist(newTopic)) {
+  if (topicExists(newTopic)) {
     console.error(`Topic "${newTopic}" already exists`);
     return;
   }
-  _renameTopic(originalTopicPath, newTopic);
+  _renameTopic(originalTopic, newTopic);
 };
 
 export const deleteTopic = (topic: string): void => {
-  if (doesTopicExist(topic)) {
+  if (topicExists(topic)) {
     _deleteTopic(topic);
   } else {
     console.error(`Topic "${topic}" does not exist`);
   }
 };
 
-export const doesTopicExist = (topic: string): boolean => {
+export const topicExists = (topic: string): boolean => {
   return existsSync(getTopicPath(topic));
 };
 

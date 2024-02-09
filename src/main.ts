@@ -2,16 +2,35 @@
 
 import clArgs from 'command-line-args';
 import { existsSync, mkdirSync } from 'fs';
-// import args from 'args';
 
-import { getInput, editInput, selectInput } from './cli';
 import { CHEAT_SHEET_DIRECTORY } from './constants';
-import { createTopic, listTopics, renameTopic, deleteTopic } from './handlers/topic';
-import path from 'path';
+import {
+  addTopic,
+  editTopic,
+  printTopics,
+  removeTopic,
+} from './cli/handlers/topic';
 
-type ResourceName = 'topic' | 'cmd';
+enum Resource {
+  Topic = 'topic',
+  Topics = 'topics',
+  Cmd = 'cmd',
+}
 
-type SubCommandName = 'add' | 'ls' | 'edit' | 'rm';
+enum SubCommand {
+  Add = 'add',
+  List = 'ls',
+  Edit = 'edit',
+  Remove = 'rm',
+}
+
+const isTopic = (resourceName: string): resourceName is Resource => {
+  return resourceName === Resource.Topic || resourceName === Resource.Topics;
+};
+
+const isCommand = (resourceName: string): resourceName is Resource => {
+  return resourceName === Resource.Cmd;
+};
 
 const main = async () => {
   if (!existsSync(CHEAT_SHEET_DIRECTORY)) {
@@ -24,65 +43,30 @@ const main = async () => {
   const mainOptions = clArgs(mainDefinition, { stopAtFirstUnknown: true })
   const mainArgv = mainOptions._unknown || []
   
-  if (mainOptions.resource === 'topic') {
+  if (isTopic(mainOptions.resource)) {
   
     const subDefinition = [
       { name: 'subcommand', defaultOption: true },
     ];
     const subOptions = clArgs(subDefinition, { stopAtFirstUnknown: true, argv: mainArgv });
-  
-    if (subOptions.subcommand === 'ls') {
-      const topics = listTopics();
-      if (topics.length) {
-        topics.forEach((topic) => console.log(topic));
-      } else {
-        console.log('No topics found, try creating one!');
-      }
-    } else if (subOptions.subcommand === 'add') {
-      const addTopicDefinition = [
-        { name: 'topicName', defaultOption: true }
-      ];
-      const addTopicOptions = clArgs(addTopicDefinition, { argv: subOptions._unknown ?? [] });
-      if (addTopicOptions.topicName) {
-        createTopic(addTopicOptions.topicName);
-      } else {
-        const topicName = await getInput('Enter new topic name: ');
-        createTopic(topicName);
-      }
-    } else if (subOptions.subcommand === 'edit') {
-      const editTopicDefinition = [
-        { name: 'topicName', defaultOption: true }
-      ];
-      const editTopicOptions = clArgs(editTopicDefinition, { argv: subOptions._unknown ?? [] });
-      if (editTopicOptions.topicName) {
-        const newTopicName = await editInput(editTopicOptions.topicName);
-        renameTopic(editTopicOptions.topicName, newTopicName);
-      } else {
-        const topics = listTopics();
-        if (!topics.length) {
-          console.log('No topics found, try creating one!');
-          return;
-        }
-        const oldTopicName = await selectInput('Select a topic name to edit:', topics);
-        const newTopicName = await editInput(oldTopicName);
-        renameTopic(oldTopicName, newTopicName);
-      }
-    } else if (subOptions.subcommand === 'rm') {
-      const deleteTopicDefinition = [
-        { name: 'topicName', defaultOption: true }
-      ];
-      const deleteTopicOptions = clArgs(deleteTopicDefinition, { argv: subOptions._unknown ?? [] });
-      if (deleteTopicOptions.topicName) {
-        deleteTopic(deleteTopicOptions.topicName);
-      } else {
-        const topics = listTopics();
-        if (!topics.length) {
-          console.log('No topics found, try creating one!');
-          return;
-        }
-        const topicName = await selectInput('Select a topic name to delete:', topics);
-        deleteTopic(topicName);
-      }
+
+    const { subcommand } = subOptions;
+    switch (subcommand) {
+      case SubCommand.Add:
+        addTopic();
+        break;
+      case undefined:
+      case SubCommand.List:
+        printTopics();
+        break;
+      case SubCommand.Edit:
+        editTopic();
+        break;
+      case SubCommand.Remove:
+        removeTopic();
+        break;
+      default:
+        console.log(`"${subcommand}" is an invalid command for the topic resource`);
     }
   
   }
