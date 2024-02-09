@@ -1,13 +1,13 @@
 {
   "name": "cli-cheat-sheet",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha",
   "description": "",
   "main": "dist/main.js",
   "bin": {
     "cheat": "./dist/main.js"
   },
-  
   "scripts": {
+    "prebuild": "rm -rf dist/",
     "build": "tsc",
     "start": "node ./build/index.js",
     "test": "ts-node ./src"
