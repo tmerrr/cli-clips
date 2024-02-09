@@ -1,9 +1,12 @@
+import cb from 'clipboardy';
+
 import { listCommands, overwriteCommandsInTopic } from '../../repositories/commands';
 import {
   getInput,
   editInput,
   confirmInput,
   selectInput,
+  selectCommandFromTopic,
 } from '../helpers';
 import { selectTopic } from './common';
 
@@ -91,4 +94,20 @@ export const removeCommand = async () => {
   } else {
     console.log('Command not deleted');
   }
+};
+
+export const copyCommandToClipboard = async () => {
+  const topic = await selectTopic('Select topic:');
+  if (topic === null) {
+    return;
+  }
+  const command = await selectCommandFromTopic(
+    topic,
+    'Select command:',
+  );
+  if (command === null) {
+    return;
+  }
+  await cb.write(command);
+  console.log('Command copied to clipboard');
 };

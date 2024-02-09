@@ -3,11 +3,6 @@ import { createInterface } from 'readline';
 import { listCommands } from '../repositories/commands';
 import { listTopics } from '../repositories/topic';
 
-type InputWithIndex = {
-  index: number;
-  input: string;
-};
-
 const KEY = 'Q';
 
 export const getInput = async (question: string): Promise<string> => {
@@ -69,6 +64,16 @@ export const selectTopic = async (prompt: string): Promise<string | null> => {
     return topic;
   } else {
     console.log('No topics found');
+    return null;
+  }
+};
+
+export const selectCommandFromTopic = async (topic: string, prompt: string): Promise<string | null> => {
+  const commands = listCommands(topic);
+  if (commands.length) {
+    return selectInput(prompt, commands);
+  } else {
+    console.log('No commands in topic');
     return null;
   }
 };

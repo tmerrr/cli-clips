@@ -9,6 +9,7 @@ import {
   editCommand,
   printCommands,
   removeCommand,
+  copyCommandToClipboard,
 } from './cli/handlers/command';
 import {
   addTopic,
@@ -42,7 +43,7 @@ const main = async () => {
   if (!existsSync(CHEAT_SHEET_DIRECTORY)) {
     mkdirSync(CHEAT_SHEET_DIRECTORY);
   }
-  
+
   const mainDefinition = [
     { name: 'resource', defaultOption: true }
   ]
@@ -53,8 +54,10 @@ const main = async () => {
   ];
   const subOptions = clArgs(subDefinition, { stopAtFirstUnknown: true, argv: mainArgv });
   const { subcommand } = subOptions;
-  
-  if (isTopic(mainOptions.resource)) {
+
+  if (!mainOptions.resource) {
+    copyCommandToClipboard();
+  } else if (isTopic(mainOptions.resource)) {
     switch (subcommand) {
       case SubCommand.Add:
         addTopic();
@@ -74,10 +77,12 @@ const main = async () => {
     }
   } else if (isCommand(mainOptions.resource)) {
     switch (subcommand) {
+      case undefined: // copy cmd by default
+        copyCommandToClipboard();
+        break;
       case SubCommand.Add:
         addCommand();
         break;
-      case undefined: // list by default
       case SubCommand.List:
         printCommands();
         break;
@@ -91,10 +96,7 @@ const main = async () => {
         console.log(`"${subcommand}" is an invalid command for the "command" resource`);
         break;
     }
-  } else if (!mainOptions.resource) {
-    const resources = Object.values(Resource).map((resource) => `"${resource}"`);
-    console.log(`Must specify a resource: ${resources.join(', ')}`);
-  } else{
+  } else {
     console.log(`"${mainOptions.resource}" is an invalid resource`);
   }
 };
