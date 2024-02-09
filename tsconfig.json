@@ -1,28 +1,32 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
-    "lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "outDir": "./build",
-    "moduleResolution": "node",
-    "removeComments": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": false, // change to true
-    "noUnusedParameters": false, // change to true
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "resolveJsonModule": true,
-    "baseUrl": ".",
+    /* Basic Options */
+    "target": "ES2020",                          // Specify ECMAScript target version
+    "module": "CommonJS",                        // Specify module code generation
+    "lib": ["ES2020"],                           // Specify library files to be included in the compilation
+    "outDir": "./dist",                          // Redirect output structure to the directory
+    "rootDir": "./src",                          // Specify the root directory of input files
+    "strict": true,                              // Enable all strict type-checking options
+    "esModuleInterop": true,                     // Enables emit interoperability between CommonJS and ES Modules
+    "skipLibCheck": true,                        // Skip type checking of all declaration files (*.d.ts)
+    "forceConsistentCasingInFileNames": true,    // Disallow inconsistently-cased references to the same file
+
+    /* Module Resolution Options */
+    "moduleResolution": "node",                  // Resolve modules using Node.js style
+    "baseUrl": "./",                             // Base directory to resolve non-relative module names
+    "paths": {                                   // Specify paths mapping to be computed relative to baseUrl
+      "*": ["node_modules/*", "src/types/*"]
+    },
+
+    /* Advanced Options */
+    "declaration": true,                         // Generates corresponding '.d.ts' file
+    "sourceMap": true                            // Generates corresponding '.map' file
   },
-  "exclude": ["node_modules"],
-  "include": ["./src/**/*.ts"]
+  "include": [
+    "src/**/*"                                   // Include all files in the src directory
+  ],
+  "exclude": [
+    "node_modules",                              // Exclude the node_modules directory
+    "**/*.test.ts"                               // Exclude test files
+  ]
 }

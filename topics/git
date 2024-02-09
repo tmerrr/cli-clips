@@ -1,3 +1,0 @@
-git submodule deinit mymodule
-rm -rf .git/modules/mymodule
-git rm -f mymodule
