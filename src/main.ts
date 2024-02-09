@@ -5,6 +5,12 @@ import { existsSync, mkdirSync } from 'fs';
 
 import { CHEAT_SHEET_DIRECTORY } from './constants';
 import {
+  addCommand,
+  editCommand,
+  printCommands,
+  removeCommand,
+} from './cli/handlers/command';
+import {
   addTopic,
   editTopic,
   printTopics,
@@ -42,15 +48,13 @@ const main = async () => {
   ]
   const mainOptions = clArgs(mainDefinition, { stopAtFirstUnknown: true })
   const mainArgv = mainOptions._unknown || []
+  const subDefinition = [
+    { name: 'subcommand', defaultOption: true },
+  ];
+  const subOptions = clArgs(subDefinition, { stopAtFirstUnknown: true, argv: mainArgv });
+  const { subcommand } = subOptions;
   
   if (isTopic(mainOptions.resource)) {
-  
-    const subDefinition = [
-      { name: 'subcommand', defaultOption: true },
-    ];
-    const subOptions = clArgs(subDefinition, { stopAtFirstUnknown: true, argv: mainArgv });
-
-    const { subcommand } = subOptions;
     switch (subcommand) {
       case SubCommand.Add:
         addTopic();
@@ -66,11 +70,27 @@ const main = async () => {
         removeTopic();
         break;
       default:
-        console.log(`"${subcommand}" is an invalid command for the topic resource`);
+        console.log(`"${subcommand}" is an invalid command for the "topic" resource`);
     }
-  
   } else if (isCommand(mainOptions.resource)) {
-
+    switch (subcommand) {
+      case SubCommand.Add:
+        addCommand();
+        break;
+      case undefined: // list by default
+      case SubCommand.List:
+        printCommands();
+        break;
+      case SubCommand.Edit:
+        editCommand();
+        break;
+      case SubCommand.Remove:
+        removeCommand();
+        break;
+      default:
+        console.log(`"${subcommand}" is an invalid command for the "command" resource`);
+        break;
+    }
   } else if (!mainOptions.resource) {
     const resources = Object.values(Resource).map((resource) => `"${resource}"`);
     console.log(`Must specify a resource: ${resources.join(', ')}`);

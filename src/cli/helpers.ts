@@ -1,5 +1,12 @@
 import inquirer from 'inquirer';
 import { createInterface } from 'readline';
+import { listCommands } from '../repositories/commands';
+import { listTopics } from '../repositories/topic';
+
+type InputWithIndex = {
+  index: number;
+  input: string;
+};
 
 const KEY = 'Q';
 
@@ -49,7 +56,19 @@ export const confirmInput = async (question: string): Promise<boolean> => {
       name: KEY,
       type: 'confirm',
       message: question,
+      prefix: '',
     }
   ]);
   return answer[KEY];
 }
+
+export const selectTopic = async (prompt: string): Promise<string | null> => {
+  const topics = listTopics();
+  if (topics.length) {
+    const topic = await selectInput(prompt, topics);
+    return topic;
+  } else {
+    console.log('No topics found');
+    return null;
+  }
+};

@@ -1,16 +1,16 @@
 import {
   getInput,
-  selectInput,
   editInput,
   confirmInput,
 } from '../helpers';
 import {
-  topicExists,
   createTopic,
   listTopics,
   renameTopic,
   deleteTopic,
 } from '../../repositories/topic';
+import { topicExists } from '../../repositories/common';
+import { selectTopic } from './common';
 
 export const addTopic = async () => {
   const topic = await getInput('Enter new topic name: ');
@@ -25,26 +25,25 @@ export const addTopic = async () => {
 export const printTopics = async () => {
   const topics = listTopics();
   if (topics.length) {
-    topics.forEach((topic) => console.log(topic));
+    console.log(topics.join('\n'));
+    // topics.forEach((topic) => console.log(topic));
   } else {
     console.log('No topics found');
   }
 };
 
 export const editTopic = async () => {
-  const topics = listTopics();
-  if (topics.length) {
-    const topic = await selectInput('Select topic to edit: ', topics);
-    const newName = await editInput(topic);
-    if (topicExists(newName)) {
-      console.error(`Topic "${newName}" already exists`);
-      return;
-    }
-    renameTopic(topic, newName);
-    console.log(`Topic "${topic}" renamed to "${newName}"`);
-  } else {
-    console.log('No topics found');
+  const topic = await selectTopic('Select topic to edit: ');
+  if (topic === null) {
+    return;
   }
+  const newName = await editInput(topic);
+  if (topicExists(newName)) {
+    console.error(`Topic "${newName}" already exists`);
+    return;
+  }
+  renameTopic(topic, newName);
+  console.log(`Topic "${topic}" renamed to "${newName}"`);
 };
 
 export const removeTopic = async () => {
@@ -61,14 +60,3 @@ export const removeTopic = async () => {
     console.log('Topic not deleted');
   }
 }
-
-export const selectTopic = async (prompt: string): Promise<string | null> => {
-  const topics = listTopics();
-  if (topics.length) {
-    const topic = await selectInput(prompt, topics);
-    return topic;
-  } else {
-    console.log('No topics found');
-    return null;
-  }
-};

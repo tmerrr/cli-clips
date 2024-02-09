@@ -1,16 +1,14 @@
-import path from 'path';
 import {
-  existsSync,
   readdirSync,
   writeFileSync,
   renameSync,
   rmSync,
 } from 'fs';
 import { CHEAT_SHEET_DIRECTORY } from '../constants';
+import { getTopicPath, topicExists } from './common';
 
 export const listTopics = (): string[] => {
-  const topics = readdirSync(CHEAT_SHEET_DIRECTORY);
-  return topics;
+  return readdirSync(CHEAT_SHEET_DIRECTORY);
 };
 
 export const createTopic = (topic: string): void => {
@@ -41,10 +39,6 @@ export const deleteTopic = (topic: string): void => {
   }
 };
 
-export const topicExists = (topic: string): boolean => {
-  return existsSync(getTopicPath(topic));
-};
-
 const _createTopic = (topic: string): void => {
   writeFileSync(getTopicPath(topic), '');
 };
@@ -55,8 +49,4 @@ const _renameTopic = (originalTopic: string, newTopic: string): void => {
 
 const _deleteTopic = (topic: string): void => {
   rmSync(getTopicPath(topic), { recursive: true });
-};
-
-const getTopicPath = (topicName: string): string => {
-  return path.join(CHEAT_SHEET_DIRECTORY, topicName);
 };
