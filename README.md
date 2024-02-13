@@ -45,3 +45,9 @@ clip cmd ls # select a topic to view all commands under this topic
 clip cmd edit # select the topic where the command is stored, then select the command to change the text
 clip cmd rm # select a topic, then select a command to permanently remove
 ```
+
+Finally, we can now select a command to copy to the clipboard:
+
+```sh
+clip # select topic, then select a command to copy to clipboard
+```
