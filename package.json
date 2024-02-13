@@ -1,25 +1,23 @@
 {
-  "name": "cli-cheat-sheet",
-  "version": "1.0.0",
-  "description": "",
+  "name": "cli-clips",
+  "version": "1.0.1",
+  "description": "CLI tool to store and copy snippets",
   "main": "dist/main.js",
   "bin": {
-    "cheat": "./dist/main.js"
+    "clip": "dist/main.js"
   },
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },  
   "scripts": {
     "prebuild": "rm -rf dist/",
     "build": "tsc",
-    "start": "node ./build/index.js",
-    "test": "ts-node ./src"
+    "postbuild": "chmod +x ./dist/main.js",
+    "start": "node ./dist/main.js",
+    "test": "ts-node ./src/main.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Tom Moir",
   "license": "ISC",
   "devDependencies": {
     "@types/inquirer": "^8.2.1",

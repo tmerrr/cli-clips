@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
-// import clArgs from 'command-line-args';
 import { existsSync, mkdirSync } from 'fs';
-
 import { CHEAT_SHEET_DIRECTORY } from './constants';
 import { copyCommandToClipboard, handleCommand, handleTopic } from './cli';
 
