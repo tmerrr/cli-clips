@@ -18,20 +18,15 @@ commands:
 Install the package globally to have access to the clips commands in any terminal window:
 
 ```sh
-npm i -g cli-slips
+npm i -g cli-clips
 ```
 
 ## Usage
 
-Before creating any commands, we need to make sure we have a topic:
+Before creating any commands, we need to make sure we have a topic. Create and manage topics using the following:
 
 ```sh
-clip topic add
-```
-
-Then follow the prompt to enter your desired topic name.  Topics can then be managed using the following commands
-
-```sh
+clip topic add # follow the prompt to create a new topic
 clip topic ls # lists all topics
 clip topic edit # select a topic to edit the name
 clip topic rm # select a topic to permanently remove, along with all associated commands (use with caution!)
